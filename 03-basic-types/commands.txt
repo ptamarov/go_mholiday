@@ -1,0 +1,2 @@
+cat nums.txt | go run .
+go run . < nums.txt 
