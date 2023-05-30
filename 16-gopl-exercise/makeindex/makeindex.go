@@ -3,7 +3,6 @@ package makeindex
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -47,7 +46,7 @@ func CreateIndex(upperLimit int) int {
 
 		switch status {
 		case 200:
-			err := ioutil.WriteFile(fmt.Sprintf("./comic-index/comic-%d.json", number), newEntry, 0644)
+			err := os.WriteFile(fmt.Sprintf("./comic-index/comic-%d.json", number), newEntry, 0644)
 
 			if err != nil {
 				fmt.Printf("(!) Error %s while storing comic number %d. Moving on...\n", err, number)
