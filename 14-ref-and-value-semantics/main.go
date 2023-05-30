@@ -34,7 +34,7 @@ func pointerInsideForLoop() {
 	b := [][]byte{}
 
 	for _, item := range items {
-		a = append(a, item[:]) // Bad. Passing pointer to item, will only keep last value.
+		a = append(a, item[:]) // Bad. Passing pointer to loop variable item, will only keep last value.
 	}
 
 	fmt.Println(a) // [[5 6] [5 6] [5 6]]
