@@ -26,6 +26,7 @@ func get(url string, ch chan<- result) { // only write to the channel
 }
 
 func ping(list []string) {
+	stopper := time.After(3 * time.Second) // Modification from Section 24.
 	results := make(chan result)
 
 	for _, url := range list {
@@ -33,12 +34,15 @@ func ping(list []string) {
 	}
 
 	for range list { // Make sure you do not wait for data that will not arrive!
-		r := <-results
-
-		if r.err != nil {
-			log.Printf("%-20s %s\n", r.url, r.err)
-		} else {
-			log.Printf("%-20s %s\n", r.url, r.latency)
+		select { // Modification from Section 24.
+		case r := <-results:
+			if r.err != nil {
+				log.Printf("%-20s %s\n", r.url, r.err)
+			} else {
+				log.Printf("%-20s %s\n", r.url, r.latency)
+			}
+		case <-stopper:
+			log.Fatal("timeout")
 		}
 	}
 

@@ -11,7 +11,8 @@ func main() {
 		"https://youtube.com",
 		"https://wsj.com",
 		"https://nytimes.com",
-		"https://math.stackexchannnnnge.com/"}
+		"http://localhost:8000",
+	}
 
 	ping(list)
 	log.Println("*** Done with pings. ***")
