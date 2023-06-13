@@ -2,6 +2,10 @@ package main
 
 import "log"
 
+// Constrol what executes.
+const doFeed = false
+const doSieve = false
+
 func main() {
 	// Example 1.
 	list := []string{
@@ -18,9 +22,12 @@ func main() {
 	log.Println("*** Done with pings. ***")
 
 	// Example 2.
-	feedToChannel()
-	// This does not stop, so coming lines will not execute.
+	if doFeed {
+		feedToChannel()
+	}
 
 	// Example 3.
-	sieve(100)
+	if doSieve {
+		sieve(100)
+	}
 }

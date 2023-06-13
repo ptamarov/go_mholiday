@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-const serve = false
+const serve = true
 
 func main() {
 	// Example 1.

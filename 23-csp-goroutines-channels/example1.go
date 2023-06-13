@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"time"
@@ -12,10 +13,12 @@ type result struct {
 	latency time.Duration
 }
 
-func get(url string, ch chan<- result) { // only write to the channel
+func get(ctx context.Context, url string, ch chan<- result) { // only write to the channel
 	start := time.Now()
 
-	if resp, err := http.Get(url); err != nil {
+	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+
+	if resp, err := http.DefaultClient.Do(req); err != nil {
 		ch <- result{url, err, 0}
 	} else {
 		t := time.Since(start).Round(time.Millisecond)
@@ -26,23 +29,22 @@ func get(url string, ch chan<- result) { // only write to the channel
 }
 
 func ping(list []string) {
-	stopper := time.After(3 * time.Second) // Modification from Section 24.
 	results := make(chan result)
 
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
 	for _, url := range list {
-		go get(url, results)
+		// Injected 3 second timeout into the http.Get(). Failure will not stop the program.
+		go get(ctx, url, results)
 	}
 
-	for range list { // Make sure you do not wait for data that will not arrive!
-		select { // Modification from Section 24.
-		case r := <-results:
-			if r.err != nil {
-				log.Printf("%-20s %s\n", r.url, r.err)
-			} else {
-				log.Printf("%-20s %s\n", r.url, r.latency)
-			}
-		case <-stopper:
-			log.Fatal("timeout")
+	for range list {
+		r := <-results
+		if r.err != nil {
+			log.Printf("%-20s %s\n", r.url, r.err)
+		} else {
+			log.Printf("%-20s %s\n", r.url, r.latency)
 		}
 	}
 
