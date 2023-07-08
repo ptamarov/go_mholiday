@@ -144,7 +144,3 @@ func main() {
 
 	f()
 }
-
-// The best way to deal with errors is to make them impossible.
-// Try to reduce edge cases that are hard to test or debug.
-// Design abstractions so that operations are safe.
