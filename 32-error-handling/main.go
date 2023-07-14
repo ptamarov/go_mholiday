@@ -43,7 +43,7 @@ func (e WaveError) Error() string {
 }
 
 // with returns an error with a particular value (e.g. header type)
-func (e WaveError) with(val int) WaveError {
+func (e WaveError) With(val int) WaveError {
 	e1 := e
 	e1.value = val
 	return e1
@@ -94,6 +94,7 @@ func DecodeHeader(b []byte) (*Header, []byte, error) {
 	//...//
 	// Note: RIFF is Resource Interchange File Format
 	// A RIFF file starts out with a file header followed by a sequence of data chunks.
+	// empty return juist to get things to compile
 	return nil, nil, nil
 }
 
@@ -128,7 +129,6 @@ func (we *WaveError) Is(err error) bool {
 }
 
 // error.As looks at the chain of errors and tries to extract the error being looked for
-
 // panic and recover behaves like exception handling
 
 func f() {
